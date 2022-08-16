@@ -5,7 +5,14 @@ using UnityEngine;
 public class EnemyMover : MonoBehaviour
 {
 	[SerializeField] List<Waypoint> path = new List<Waypoint>();
-	[SerializeField] [Range(0f, 5f)] float speed = 1f;
+	[SerializeField][Range(0f, 5f)] float speed = 1f;
+
+	Enemy enemy;
+
+	void Start()
+	{
+		enemy = GetComponent<Enemy>();
+	}
 
 	void OnEnable()
 	{
@@ -25,7 +32,7 @@ public class EnemyMover : MonoBehaviour
 
 		GameObject[] waypoints = GameObject.FindGameObjectsWithTag("Path");
 
-		foreach(GameObject waypoint in waypoints)
+		foreach (GameObject waypoint in waypoints)
 		{
 			path.Add(waypoint.GetComponent<Waypoint>());
 		}
@@ -41,12 +48,14 @@ public class EnemyMover : MonoBehaviour
 
 			transform.LookAt(endPosition);
 
-			while(travelPercent < 1){
+			while (travelPercent < 1)
+			{
 				travelPercent += Time.deltaTime * speed;
 				transform.position = Vector3.Lerp(startPosition, endPosition, travelPercent);
 				yield return new WaitForEndOfFrame();
 			}
 		}
+		enemy.StealGold();
 		gameObject.SetActive(false);
 	}
 }
